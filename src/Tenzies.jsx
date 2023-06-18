@@ -10,6 +10,7 @@ const Tenzies = () => {
   const [dice, setDice] = useState(allNewDie());
   const [tenzies, setTenzies] = useState(false);
   const [numberOfRolls, setNumberOfRolls] = useState(0);
+  const [gameStart, setGameStart] = useState(false);
   // const [records, setRecords] = useState([]);
   //   const [topScore, setTopScore] = useState("");
 
@@ -70,6 +71,12 @@ const Tenzies = () => {
   }
 
   const rollDice = () => {
+    if (!gameStart) {
+      setGameStart(true);
+      ref.current.startTimer();
+      return;
+    }
+
     if (tenzies) {
       setTenzies(false);
       setDice(allNewDie());
@@ -111,7 +118,7 @@ const Tenzies = () => {
   };
 
   const diceElements = dice.map(die => (
-    <Die key={die.id} value={die.value} isHeld={die.isHeld} holdDice={() => holdDice(die.id)} />
+    <Die key={die.id} value={die.value} isHeld={die.isHeld} holdDice={() => holdDice(die.id)} gameStart={gameStart} />
   ));
 
   return (
@@ -127,7 +134,10 @@ const Tenzies = () => {
         <p className="counter-paragraph">
           Current number of rolls: <span className="counter">{numberOfRolls}</span>
         </p>
+        {/* <Modal /> */}
+
         <div className="dice-container">{diceElements}</div>
+
         <button className="roll-dice" onClick={rollDice}>
           {tenzies ? "New Game" : "Roll"}
         </button>
